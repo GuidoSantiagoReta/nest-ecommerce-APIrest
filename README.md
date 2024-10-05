@@ -1,70 +1,70 @@
-# Proyecto Nest ( Ecommerce APIrest )
+# Proyecto Nest (API REST de Ecommerce)
 
-El objetivo es desarrollar una aplicación que gestione diferentes entidades de un e-commerce a través de sus respectivos controladores. Hasta ahora, he implementado los controladores para las siguientes entidades:
+## Objetivo
+Desarrollar una aplicación que gestione diferentes entidades de un e-commerce a través de sus respectivos controladores.
 
-- Productos.
-- Categorías.
-- Compradores.
-- Fabricantes.
-- Operadores.
-- Pedidos.
+## Componentes principales
 
-__Cada entidad tiene su propio Controller, que maneja las siguientes peticiones HTTP:__
+__1. Controladores__
+Clases responsables de manejar solicitudes HTTP entrantes y devolver respuestas.
+Asociados a rutas específicas del sistema de enrutamiento de NestJS.
+Modularizados y reutilizables.
 
-__GET__ Para obtener uno o todos los registros.
-__POST__ Para crear nuevos registros.
-__PUT__ Para actualizar registros existentes.
-__DELETE__ Para eliminar registros por ID.
+__2. Servicios__
+Clases que encapsulan la lógica de negocio.
+Utilizan el principio de inyección de dependencias.
+Contienen métodos para interactuar con bases de datos y realizar llamadas a APIs.
 
-#### Controlador Productos
-__En el controlador de Productos, implementé métodos que permiten:__
+__3. Entidades__
+Clases que definen los atributos y comportamientos de objetos específicos.
+Ejemplo: producto.entity.ts
 
-- Obtener todos los productos.
-- Obtener un producto por su ID.
-- Crear un nuevo producto.
-- Actualizar un producto existente.
-- Eliminar un producto.
+__4. DTOs (Data Transfer Objects)__
+Máscaras para filtrar entradas de datos.
+Validan la estructura y tipos de datos recibidos desde el cliente.
+Protegen la API contra solicitudes malformadas o maliciosas.
 
-Para asegurarme de que las rutas y los datos funcionan correctamente, estoy utilizando Postman para probar cada uno de los endpoints de la API. 
+__5. Bibliotecas adicionales__
 
+@nestjs/mapped-types: Para crear tipos flexibles basados en otros tipos existentes.
+class-validator: Para validar decoradores y validaciones en tiempo de ejecución.
+class-transformer: Para facilitar la conversión entre diferentes formatos de datos.
 
-__main.ts__
+## Implementación
 
-- Archivo principal de la aplicación
-
-
-## Controllers
-- Los controladores son clases responsables de manejar las solicitudes HTTP entrantes y devolver una respuesta. 
-- Estos controladores son parte del sistema de enrutamiento de NestJS y están diseñados para ser modularizados y reutilizables.
-- Cada controlador se asocia típicamente con una ruta o un conjunto de rutas específicas. Dentro de un controlador, puedes definir métodos que se corresponden con diferentes verbos HTTP, como GET, POST, PUT o DELETE, y cada uno manejará las solicitudes que lleguen a la ruta correspondiente.
-- Un controlador puede manejar todas las solicitudes relacionadas con usuarios, como crear, leer, actualizar y eliminar usuarios. 
-- Cada método del controlador correspondería a una acción específica sobre los usuarios, como obtener una lista de usuarios, obtener un usuario por su ID, crear un nuevo usuario, actualizar la información de un usuario existente o eliminar un usuario.
-- Los controladores en NestJS suelen ser simples y contienen principalmente lógica relacionada con el manejo de solicitudes y la llamada a servicios que realizan la lógica de negocio. Esto permite mantener una separación clara de las responsabilidades entre el enrutamiento, la lógica de negocio y el acceso a datos en una aplicación NestJS.
-
-__crear controlador específico__
+Generación de controladores:
 
 ```
-nest generate controller <controller-name>  o abreviado
+nest generate controller <nombre-del-controlador>
 
 ```
-__ejemplo en una subcarpeta__
+Creación de servicios:
 
 ```
-nest generate controller controllers/compradores
+nest generate service <nombre-del-servicio>
 
 ```
+## Implementación de DTOs
 
 ```
- nest g co <controller-name>
+import { IsString, IsNotEmpty } from 'class-validator';
+
+export class CreateProductDTO {
+  @IsString()
+  @IsNotEmpty()
+  readonly nombre: string;
+  //...
+}
 
 ```
+Uso de @nestjs/mapped-types para crear tipos flexibles:
+```
+import { PartialType, OmitType } from '@nestjs/mapped-types';
 
+export class UpdateProductDTO extends PartialType(OmitType(CreateProductDTO, ['nombre'])) {}
 
+```
+Validación y transformación de datos con class-validator y class-transformer.
 
-
-
-
-
-
-
-
+## Pruebas
+Para asegurar que las rutas y los datos funcionen correctamente, se utiliza Postman para probar cada uno de los endpoints de la API.
