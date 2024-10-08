@@ -27,10 +27,16 @@ export class CreateProductDTO {
     @IsNotEmpty()
     readonly imagen: string;
   }
-  
-  export class UpdateProductDTO extends PartialType
-  (OmitType(CreateProductDTO, ['nombre']),){}
+  //permite actualizar todos los campos del producto 
+  export class UpdateProductDTO extends PartialType(CreateProductDTO) {}
 
+// Eliminar producto
+  export class RemoveProductDTO {
+    @IsString()
+    @IsNotEmpty()
+    readonly idProduct: string; 
+  }
+  
 
 {/*
   export class UpdateProductDTO {
