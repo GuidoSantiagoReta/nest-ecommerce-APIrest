@@ -172,3 +172,8 @@ Permite serializar y deserializar objetos fácilmente.
  npm i class-transformer
 
 ```
+8/10
+
+## Módulos
+- Es una forma de organizar y estructurar la aplicación, contiene componentes, controladores, servicios, y otros módulos.
+- Se utilizan para encapsular la funcionalidad relacionada y definir el alcance de los componentes detro de una aplicación NestJS. Cada módulo puede tener sus propio controladores, servicios, y otra dependencias.
