@@ -177,3 +177,5 @@ Permite serializar y deserializar objetos fácilmente.
 ## Módulos
 - Es una forma de organizar y estructurar la aplicación, contiene componentes, controladores, servicios, y otros módulos.
 - Se utilizan para encapsular la funcionalidad relacionada y definir el alcance de los componentes detro de una aplicación NestJS. Cada módulo puede tener sus propio controladores, servicios, y otra dependencias.
+
+## Operadores

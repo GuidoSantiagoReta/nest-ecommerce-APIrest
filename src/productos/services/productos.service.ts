@@ -1,8 +1,8 @@
 //El servicio contiene toda la lógica de negocio
 
 import { Injectable, NotFoundException  } from '@nestjs/common';
-import { Producto } from 'src/entities/producto.entity';
-import { CreateProductDTO, UpdateProductDTO } from 'src/dtos/productos.dto';
+import { Producto } from 'src/productos/entities/producto.entity';
+import { CreateProductDTO, UpdateProductDTO } from 'src/productos/dtos/productos.dto';
 
 @Injectable()
 export class ProductosService {
