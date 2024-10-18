@@ -1,8 +1,8 @@
 //El controlador se enfoca solo en manejar las rutas y solicitudes.
 
 import { Controller, Get,Post,Put,Param,Body,Delete,} from '@nestjs/common';
-import {CreateProductDTO,UpdateProductDTO,} from 'src/dtos/productos.dto';
-import { ProductosService } from 'src/services/productos/productos.service';
+import {CreateProductDTO,UpdateProductDTO,} from 'src/productos/dtos/productos.dto';
+import { ProductosService } from 'src/productos/services/productos.service';
 import { ParseIntPipe } from 'src/common/parse-int/parse-int.pipe';
 
 @Controller('productos')
