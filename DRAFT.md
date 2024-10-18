@@ -182,3 +182,53 @@ Permite serializar y deserializar objetos fácilmente.
 - nest g mo operadores
 - nest g mo productos
 - Crear las cuatro carpetas correspondientes para cada módulo ( controllers, services, dtos y entities)
+
+## Variables de entorno con useValue 
+
+__Inyectar la variable en AppService:__
+
+```
+import { Injectable, Inject } from '@nestjs/common';
+
+@Injectable()
+export class AppService {
+  constructor(@Inject('APIKEY') private apiKey: string) {} 
+
+  getHello(): string {
+    return `La llave de la aplicacion es: ${this.apiKey}`;
+  }
+}
+
+__Controlador AppController para exponer la variable:__
+
+
+```
+import { Controller, Get } from '@nestjs/common';
+import { AppService } from './app.service';
+
+@Controller()
+export class AppController {
+  constructor(private readonly appService: AppService) {}
+
+  @Get()
+  getHello(): string {
+    return this.appService.getHello();
+  }
+}
+  ```
+
+__Arrancar la aplicación en modo desarrollo:__
+
+```
+npm run start:dev
+
+```
+
+
+__Arrancar la aplicación en modo producción (powershell)__
+
+```
+$env:NODE_ENV="prod"
+npm run start:dev
+
+```
