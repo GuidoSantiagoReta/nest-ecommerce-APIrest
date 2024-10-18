@@ -183,6 +183,19 @@ Permite serializar y deserializar objetos fácilmente.
 - nest g mo productos
 - Crear las cuatro carpetas correspondientes para cada módulo ( controllers, services, dtos y entities)
 
+
+
+
+
+
+10/10  ( Se realiza toda la migración completa a módulos con sus propios servicios, dtos, entidades, y controladores).
+
+## Migración de módulos, pruebas con postman y tareas asíncronas
+
+- Tareas Realizadas en feature/unificar módulos.
+
+
+
 ## Variables de entorno con useValue 
 
 __Inyectar la variable en AppService:__
