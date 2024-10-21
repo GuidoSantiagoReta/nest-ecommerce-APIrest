@@ -268,4 +268,4 @@ importar el ConfigModule en el módulo principal de tu aplicación.
 ## VALIDACION DE VARIABLES DE ENTORNO CON JOI 
 
 
-// SEGUIR VIDEO VALIDACION CON JOI 44:55   O HACER 11.1 
+## DOCUMENTACIÓN CON SWAGGER
