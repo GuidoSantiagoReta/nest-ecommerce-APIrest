@@ -211,11 +211,11 @@ export class AppService {
     return `La llave de la aplicacion es: ${this.apiKey}`;
   }
 }
-
+```
 __Controlador AppController para exponer la variable:__
 
-
 ```
+
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 
@@ -267,5 +267,19 @@ importar el ConfigModule en el módulo principal de tu aplicación.
 
 ## VALIDACION DE VARIABLES DE ENTORNO CON JOI 
 
+- Joi es una biblioteca utilizada para la validación de datos. Permite definir esquemas de validación para asegurarse de que los datos recibidos en peticiones HTTP (como en un cuerpo de solicitud, parámetros o encabezados) cumplan con ciertas reglas y formatos antes de ser procesados.
 
-## DOCUMENTACIÓN CON SWAGGER
+__Ejemplo en variables de entorno:__
+
+```
+validationSchema:Joi.object({
+        APIKEY: Joi.number().required(),
+        DB_NAME:Joi.string().required(),
+        DB_PORT: Joi.number().required(),
+      })
+    }),
+```
+
+## 18/10 DOCUMENTACIÓN CON SWAGGER
+
+- npm install --save @nestjs/swagger swagger-ui-express
