@@ -172,7 +172,7 @@ Permite serializar y deserializar objetos fácilmente.
  npm i class-transformer
 
 ```
-8/10
+# 8/10
 
 ## Módulos
 - Es una forma de organizar y estructurar la aplicación, contiene componentes, controladores, servicios, y otros módulos.
@@ -188,7 +188,7 @@ Permite serializar y deserializar objetos fácilmente.
 
 
 
-10/10  ( Se realiza toda la migración completa a módulos con sus propios servicios, dtos, entidades, y controladores).
+# 10/10  ( Se realiza toda la migración completa a módulos con sus propios servicios, dtos, entidades, y controladores).
 
 ## Migración de módulos, pruebas con postman y tareas asíncronas
 
@@ -245,3 +245,27 @@ $env:NODE_ENV="prod"
 npm run start:dev
 
 ```
+
+
+# 15/10 configuración de entornos
+
+__instalar las dependencias @nestjs/config__ 
+
+```
+
+npm install @nestjs/config 
+
+```
+
+importar el ConfigModule en el módulo principal de tu aplicación.
+
+- .prod.env
+- .test.env
+- .env.model
+
+- validación de variables de entorno
+
+## VALIDACION DE VARIABLES DE ENTORNO CON JOI 
+
+
+// SEGUIR VIDEO VALIDACION CON JOI 44:55   O HACER 11.1 

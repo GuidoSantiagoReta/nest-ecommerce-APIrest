@@ -7,6 +7,10 @@ import { ParseIntPipe } from 'src/common/parse-int/parse-int.pipe';
 export class OperadoresController {
   constructor(private operadoresService: OperadoresService) {}
 
+  @Get()
+  findAll() {
+    return this.operadoresService.findAll();
+  }
   // Método para obtener los pedidos de un operador por ID
   @Get(':id/pedidos')
   getOrders(@Param('id', ParseIntPipe) id: number) {
