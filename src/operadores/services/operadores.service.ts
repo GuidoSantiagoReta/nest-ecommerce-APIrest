@@ -1,9 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Operador } from '../entities/operador.entity';
 import { Pedido } from '../entities/pedido.entity';
 import { ProductosService } from './../../productos/services/productos.service';
 import { CreateOperadorDTO, UpdateOperadorDTO } from '../dtos/operador.dto';
+import { Client } from 'pg';
 
 @Injectable()
 export class OperadoresService {
@@ -15,7 +16,7 @@ export class OperadoresService {
   constructor(
     private productsService: ProductosService,
     private configService: ConfigService,
-    
+    @Inject('PG') private clientPg: Client
   ) {
     const dbName = this.configService.get<string>('config.database.name');
     const apiKey = this.configService.get<string>('config.apiKey');
@@ -44,5 +45,17 @@ export class OperadoresService {
     const dbName = this.configService.get<string>('config.database.name');
     console.log(apiKey, dbName);
     return this.operadores;
+  }
+
+  getTasks() {
+    return new Promise((resolve, reject) => {
+      this.clientPg.query('SELECT * FROM tareas', (err, res) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(res.rows);
+        }
+      });
+    });
   }
 }

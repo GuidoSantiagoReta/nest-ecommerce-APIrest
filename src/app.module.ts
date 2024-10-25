@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { environments } from './environments';
 import config from './config';
@@ -10,18 +10,37 @@ import { HttpModule, HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
 import { DatabaseModule } from './database/database.module';
 import * as Joi from'joi';
+import { Client } from 'pg';
 
 const TAREA_ASINC = 'TAREA_ASINC';
 
+const client = new Client({
+  user: 'root',
+  host: 'localhost',
+  database: 'my_db',
+  password: '123456',
+  port: 5432,
+});
+
+client.connect();
+
+client.query('SELECT * FROM tareas', (err, res) => {
+  if (err) {
+    console.error('Error executing query', err.stack);
+  } else {
+    console.log('Query results:', res.rows);
+  }
+});
+@Global()
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: environments[process.env.NODE_ENV] || '.env',
-      load: [config],  //leer como archivo de tipado
+      load: [config],
       isGlobal: true,
-      validationSchema:Joi.object({
+      validationSchema: Joi.object({
         APIKEY: Joi.number().required(),
-        DB_NAME:Joi.string().required(),
+        DB_NAME: Joi.string().required(),
         DB_PORT: Joi.number().required(),
       })
     }),
@@ -52,7 +71,5 @@ const TAREA_ASINC = 'TAREA_ASINC';
       inject: [HttpService],
     },
   ],
-  
 })
-
 export class AppModule {}

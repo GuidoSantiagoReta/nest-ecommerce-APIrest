@@ -283,3 +283,44 @@ validationSchema:Joi.object({
 ## 18/10 DOCUMENTACIÓN CON SWAGGER
 
 - npm install --save @nestjs/swagger swagger-ui-express
+
+## 22/10 DOCKER - POSTGRE Y PG4ADMIN
+
+__Iniciar los servicios con Docker Compose__
+
+```
+docker-compose up -d
+
+```
+__Esto iniciará tanto PostgreSQL como PgAdmin utilizando las imágenes definidas en el archivo docker-compose.yml__
+
+__Acceder a PgAdmin__
+- Una vez que los servicios estén levantados,  acceder a PgAdmin desde el navegador con el puerto definido en el yml.
+
+
+
+__Iniciar sesión usando las credenciales definidas en el archivo yml__
+
+
+
+
+
+## para cuando no funciona: 
+
+docker ps
+
+docker compose down
+
+docker-compose logs pgadmin
+
+
+__Reiniciar el contenedor pgAdmin: A veces, simplemente reiniciar el contenedor de pgAdmin puede resolver el problema__
+
+docker-compose restart pgadmin
+
+
+__direccion del servidor__
+nest-ecommerce-apirest-postgres-1
+
+
+/// SEGUI MIN 40:24
