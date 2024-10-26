@@ -1,9 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { ApiTags, ApiOperation } from '@nestjs/swagger';
 
+@ApiTags('Pedidos') // Apitags para Swagger
 @Controller('pedidos')
 export class PedidosController {
-  //Decorador y método para obtener producto por ID
   @Get('/:nombreComprador/:idPedido')
+  @ApiOperation({ summary: 'Obtener un pedido por nombre de comprador e ID' })
   getPedido(
     @Param('idPedido') idPedido: string,
     @Param('nombreComprador') nombreComprador: string,
@@ -11,17 +13,17 @@ export class PedidosController {
     return `El id del pedido es: ${idPedido} del comprador ${nombreComprador}`;
   }
 
-  //Decorador y método para crear un producto
-
   @Post()
+  @ApiOperation({ summary: 'Crear un nuevo pedido' })
   create(@Body() payload: any) {
     return {
       message: 'Acción de crear',
       payload,
     };
   }
-  //Decorador y método para modificar productos
+
   @Put(':idPedido')
+  @ApiOperation({ summary: 'Modificar un pedido existente' })
   updatePedido(@Param('idPedido') idPedido: string, @Body() body: any): any {
     return {
       idPedido: idPedido,
@@ -29,8 +31,9 @@ export class PedidosController {
       monto: body.monto,
     };
   }
-  //Decorador y método para eliminar productos por ID
+
   @Delete(':idPedido')
+  @ApiOperation({ summary: 'Eliminar un pedido por su ID' })
   deletePedido(@Param('idPedido') idPedido: string): any {
     return {
       idPedido: idPedido,

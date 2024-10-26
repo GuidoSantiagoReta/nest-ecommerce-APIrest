@@ -172,8 +172,155 @@ Permite serializar y deserializar objetos fácilmente.
  npm i class-transformer
 
 ```
-8/10
+# 8/10
 
 ## Módulos
 - Es una forma de organizar y estructurar la aplicación, contiene componentes, controladores, servicios, y otros módulos.
 - Se utilizan para encapsular la funcionalidad relacionada y definir el alcance de los componentes detro de una aplicación NestJS. Cada módulo puede tener sus propio controladores, servicios, y otra dependencias.
+
+## Creando módulos para las entidades
+- nest g mo operadores
+- nest g mo productos
+- Crear las cuatro carpetas correspondientes para cada módulo ( controllers, services, dtos y entities)
+
+
+
+
+
+
+# 10/10  ( Se realiza toda la migración completa a módulos con sus propios servicios, dtos, entidades, y controladores).
+
+## Migración de módulos, pruebas con postman y tareas asíncronas
+
+- Tareas Realizadas en feature/unificar módulos.
+
+
+
+## Variables de entorno con useValue 
+
+__Inyectar la variable en AppService:__
+
+```
+import { Injectable, Inject } from '@nestjs/common';
+
+@Injectable()
+export class AppService {
+  constructor(@Inject('APIKEY') private apiKey: string) {} 
+
+  getHello(): string {
+    return `La llave de la aplicacion es: ${this.apiKey}`;
+  }
+}
+```
+__Controlador AppController para exponer la variable:__
+
+```
+
+import { Controller, Get } from '@nestjs/common';
+import { AppService } from './app.service';
+
+@Controller()
+export class AppController {
+  constructor(private readonly appService: AppService) {}
+
+  @Get()
+  getHello(): string {
+    return this.appService.getHello();
+  }
+}
+  ```
+
+__Arrancar la aplicación en modo desarrollo:__
+
+```
+npm run start:dev
+
+```
+
+
+__Arrancar la aplicación en modo producción (powershell)__
+
+```
+$env:NODE_ENV="prod"
+npm run start:dev
+
+```
+
+
+# 15/10 configuración de entornos
+
+__instalar las dependencias @nestjs/config__ 
+
+```
+
+npm install @nestjs/config 
+
+```
+
+importar el ConfigModule en el módulo principal de tu aplicación.
+
+- .prod.env
+- .test.env
+- .env.model
+
+- validación de variables de entorno
+
+## VALIDACION DE VARIABLES DE ENTORNO CON JOI 
+
+- Joi es una biblioteca utilizada para la validación de datos. Permite definir esquemas de validación para asegurarse de que los datos recibidos en peticiones HTTP (como en un cuerpo de solicitud, parámetros o encabezados) cumplan con ciertas reglas y formatos antes de ser procesados.
+
+__Ejemplo en variables de entorno:__
+
+```
+validationSchema:Joi.object({
+        APIKEY: Joi.number().required(),
+        DB_NAME:Joi.string().required(),
+        DB_PORT: Joi.number().required(),
+      })
+    }),
+```
+
+## 18/10 DOCUMENTACIÓN CON SWAGGER
+
+- npm install --save @nestjs/swagger swagger-ui-express
+
+## 22/10 DOCKER - POSTGRE Y PG4ADMIN
+
+__Iniciar los servicios con Docker Compose__
+
+```
+docker-compose up -d
+
+```
+__Esto iniciará tanto PostgreSQL como PgAdmin utilizando las imágenes definidas en el archivo docker-compose.yml__
+
+__Acceder a PgAdmin__
+- Una vez que los servicios estén levantados,  acceder a PgAdmin desde el navegador con el puerto definido en el yml.
+
+
+
+__Iniciar sesión usando las credenciales definidas en el archivo yml__
+
+
+
+
+
+## para cuando no funciona: 
+
+docker ps
+
+docker compose down
+
+docker-compose logs pgadmin
+
+
+__Reiniciar el contenedor pgAdmin: A veces, simplemente reiniciar el contenedor de pgAdmin puede resolver el problema__
+
+docker-compose restart pgadmin
+
+
+__direccion del servidor__
+nest-ecommerce-apirest-postgres-1
+
+
+/// SEGUI MIN 40:24
