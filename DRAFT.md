@@ -320,4 +320,3 @@ __direccion del servidor__
 nest-ecommerce-apirest-postgres-1
 
 
-/// SEGUI MIN 40:24
