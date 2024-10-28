@@ -302,9 +302,6 @@ __Acceder a PgAdmin__
 __Iniciar sesión usando las credenciales definidas en el archivo yml__
 
 
-
-
-
 ## para cuando no funciona: 
 
 docker ps
@@ -323,4 +320,3 @@ __direccion del servidor__
 nest-ecommerce-apirest-postgres-1
 
 
-/// SEGUI MIN 40:24
