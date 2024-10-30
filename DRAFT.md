@@ -323,3 +323,77 @@ __direccion del servidor__
 nest-ecommerce-apirest-postgres-1
 
 
+## 25/10 TypeORM
+- Instalación
+
+```
+npm install --save @nestjs/typeorm typeorm
+
+```
+__Importar typeorm en el databasemodule con las siguientes modificaciones__
+
+```
+import { Global, Module } from '@nestjs/common';
+import { Client } from 'pg';
+import { ConfigType } from '@nestjs/config';
+import config from '../config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+const APIKEY = 'DEV-456';
+const APIKEYPROD = 'PROD-12345';
+
+@Global()
+@Module({
+  imports: [
+    TypeOrmModule.forRootAsync({
+      inject: [config.KEY],
+      useFactory: (configService: ConfigType<typeof config>) => {
+        const { user, host, dbName, password, port } = configService.postgres;
+        return {
+          type: 'postgres',
+          host,
+          port,
+          username: user,
+          password,
+          database: dbName,
+          autoLoadEntities: true,
+          synchronize: true,
+        };
+      },
+    }),
+  ],
+  providers: [
+    {
+      provide: 'APIKEY',
+      useValue: process.env.NODE_ENV === 'prod' ? APIKEYPROD : APIKEY,
+    },
+    {
+      provide: 'PG',
+      useFactory: (configService: ConfigType<typeof config>) => {
+        const { user, host, dbName, password, port } = configService.postgres;
+        const client = new Client({
+          user,
+          host,
+          database: dbName,
+          password,
+          port,
+        });
+        client.connect((err) => {
+          if (err) {
+            console.error('connection error', err.stack);
+          } else {
+            console.log('connected to the database');
+          }
+        });
+        return client;
+      },
+      inject: [config.KEY],
+    },
+  ],
+  exports: ['APIKEY', 'PG', TypeOrmModule],
+})
+export class DatabaseModule {}
+
+```
+
+ //falta agregar typeorm solo a esta entidad (pedido.entity.ts) más adelante definir las relaciónes

@@ -6,3 +6,5 @@ export class Pedido{
     operador: Operador;
     products: Producto[];
   }
+
+  //falta agregar typeorm solo a esta entidad  más adelante definir las relaciones
