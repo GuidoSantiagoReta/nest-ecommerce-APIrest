@@ -5,6 +5,7 @@
 /postgres_data
 /pgadmin_data
 /mysql_data
+
 # Logs
 logs
 *.log
