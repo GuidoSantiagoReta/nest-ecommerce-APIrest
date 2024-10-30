@@ -397,3 +397,12 @@ export class DatabaseModule {}
 ```
 
  //falta agregar typeorm solo a esta entidad (pedido.entity.ts) más adelante definir las relaciónes
+
+ ## agregar mysql al docker copmpose  para hacer prueba de cambio de bd
+ 
+__Instalar paquete mysql__
+
+ ```
+ npm install mysql --save
+
+ ```
