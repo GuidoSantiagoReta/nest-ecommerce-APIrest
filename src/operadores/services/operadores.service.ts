@@ -24,17 +24,15 @@ export class OperadoresService {
     console.log('API_KEY:', apiKey);
   }
 
-  getOrderByUser(id: number): Pedido {
-    const operador = this.findOne(id);
-    if (!operador) {
-      throw new NotFoundException(`Operador con ID #${id} no encontrado`);
-    }
+  async getOrderByUser(id: number) {
+    const user = this.findOne(id);       // findOneBy({ id })
     return {
       date: new Date(),
-      operador,
-      products: this.productsService.findAll(),
+      user,
+      products: await this.productsService.findAll(),
     };
-  }
+    }
+  
 
   findOne(id: number): Operador {
     return this.operadores.find(op => op.id === id) || null;

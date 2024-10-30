@@ -12,7 +12,7 @@ export class ProductosController {
   constructor(private productsServices: ProductosService) {}
 
   // Decorador y método para obtener todos los productos
-  @Get('obtener')
+  @Get()
   @ApiOperation({ summary: 'Catálogo con todos los productos' })
   findAll() {
     return this.productsServices.findAll(); // utiliza el servicio ProductosService para obtener todos los productos
@@ -29,14 +29,11 @@ export class ProductosController {
   @Post()
   @ApiOperation({ summary: 'Crear un nuevo producto' })
   createProduct(@Body() payload: CreateProductDTO) {
-    return {
-      message: 'Producto creado exitosamente',
-      payload,
-    };
+    return this.productsServices.create(payload);
   }
 
   // Decorador y método para modificar productos
-  @Put('product/:idProduct')
+  @Put(':idProduct')
   @ApiOperation({ summary: 'Modificar un producto existente' })
   updateProducto(
     @Param('idProduct', ParseIntPipe) idProduct: number,
