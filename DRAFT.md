@@ -403,4 +403,6 @@ __Instalar paquete mysql__
  npm install mysql --save
 
  ```
- ## 29/10 migraciones typorm
+ ## 29/10 MIGRACIONES TypeORM
+
+ - SE AGREGAN LAS VARIABLES CORRESPONDIENTES AL .ENV
