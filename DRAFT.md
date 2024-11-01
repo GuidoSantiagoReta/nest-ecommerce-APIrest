@@ -403,3 +403,4 @@ __Instalar paquete mysql__
  npm install mysql --save
 
  ```
+ ## 29/10 migraciones typorm
