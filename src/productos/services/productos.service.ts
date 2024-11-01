@@ -18,7 +18,7 @@ export class ProductosService {
   }
 
   findOne(id: number) {
-    return this.productRepo.findOneBy({ id }).then((product) => {
+    return this.productRepo.findOne({ where: { id } }).then((product) => {
       if (!product) {
         throw new NotFoundException(`El producto con id: #${id} no existe`);
       }
@@ -32,7 +32,7 @@ export class ProductosService {
   }
 
   async update(id: number, changes: UpdateProductDTO) {
-    const product = await this.productRepo.findOneBy({ id });
+    const product = await this.productRepo.findOne({ where: { id } });
     this.productRepo.merge(product, changes);
     return this.productRepo.save(product);
   }
