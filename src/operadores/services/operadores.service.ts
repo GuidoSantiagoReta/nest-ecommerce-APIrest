@@ -1,58 +1,92 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import { Injectable, Inject, NotFoundException, ConflictException, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { Operador } from '../entities/operador.entity';
 import { Pedido } from '../entities/pedido.entity';
 import { ProductosService } from './../../productos/services/productos.service';
 import { CreateOperadorDTO, UpdateOperadorDTO } from '../dtos/operador.dto';
 import { Client } from 'pg';
+import { CompradoresService } from './compradores.service';
 
 @Injectable()
 export class OperadoresService {
-  private operadores: Operador[] = [
-    { id: 1, email: 'operador1@mail.com', password: '12345', role: 'admin' },
-    { id: 2, email: 'operador2@mail.com', password: '12345', role: 'user' },
-  ];
-
   constructor(
     private productsService: ProductosService,
     private configService: ConfigService,
-    @Inject('PG') private clientPg: Client
-  ) {
-    const dbName = this.configService.get<string>('config.database.name');
-    const apiKey = this.configService.get<string>('config.apiKey');
-    console.log('DATABASE_NAME:', dbName);
-    console.log('API_KEY:', apiKey);
+    @Inject('PG') private clientPg: Client,
+    @InjectRepository(Operador) private operadorRepo: Repository<Operador>,
+    private compradorService: CompradoresService,
+  ) {}
+
+   findAll() {
+    return this.operadorRepo.find({
+      relations: ['comprador']
+    });
   }
 
-  async getOrderByUser(id: number) {
-    const user = this.findOne(id);       // findOneBy({ id })
-    return {
-      date: new Date(),
-      user,
-      products: await this.productsService.findAll(),
-    };
+  async findOne(id: number) {
+    const operador = await this.operadorRepo.findOne({ 
+      where: { id }, 
+      relations: ['comprador'],
+     });
+    if (!operador) {
+      throw new NotFoundException(`Operador #${id} no encontrado`);
     }
+    return operador;
+  }
   
 
-  findOne(id: number): Operador {
-    return this.operadores.find(op => op.id === id) || null;
+  async create(data: CreateOperadorDTO) {
+    try {
+      const newOperador = this.operadorRepo.create(data);
+      if (data.compradorId) {
+        const comprador = await this.compradorService.findOne(data.compradorId);
+        newOperador.comprador = comprador;
+      }
+      return await this.operadorRepo.save(newOperador);
+    } catch (error) {
+      if (error.code === '23505') {  // Código de error de clave única duplicada
+        throw new ConflictException('Operador ya existe con este email');
+      } else {
+        throw new InternalServerErrorException('Error al crear el operador');
+      }
+    }
   }
 
-  findAll() {
-    const apiKey = this.configService.get<string>('config.apiKey');
-    const dbName = this.configService.get<string>('config.database.name');
-    console.log(apiKey, dbName);
-    return this.operadores;
+  async update(id: number, changes: UpdateOperadorDTO) {
+    const operador = await this.findOne(id);
+    if (changes.compradorId){
+      const nuevoComprador = await this.compradorService.findOne(
+        changes.compradorId,
+      );
+      operador.comprador = nuevoComprador;
+    }
+    const updOperad =this.operadorRepo.merge(operador, changes);
+    return this.operadorRepo.save(updOperad);
+  }
+
+  remove(id: number) {
+    return this.operadorRepo.delete(id);
+  }
+
+  async getOrderByUser(id: number): Promise<Pedido> {
+    const operador = await this.operadorRepo.findOne({ where: { id } });
+    return {
+      date: new Date(),
+      operador,
+      products: await this.productsService.findAll(),
+    };
   }
 
   getTasks() {
+    // solo a modo de ejemplo, no es buena práctica reutilizar métodos
     return new Promise((resolve, reject) => {
       this.clientPg.query('SELECT * FROM tareas', (err, res) => {
         if (err) {
           reject(err);
-        } else {
-          resolve(res.rows);
         }
+        resolve(res.rows);
       });
     });
   }
