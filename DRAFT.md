@@ -406,3 +406,20 @@ __Instalar paquete mysql__
  ## 29/10 MIGRACIONES TypeORM
 
  - SE AGREGAN LAS VARIABLES CORRESPONDIENTES AL .ENV
+
+ ## 31/10 OPERCIONES TYPEORM
+
+ - uno a uno 
+
+ __Generar la nueva migracion onetoone (operador /comprador)__
+
+
+```
+npm run migrations:generate -- onetoone
+
+```
+
+__Aplicar la Migración:__
+
+
+npm run migrations:run

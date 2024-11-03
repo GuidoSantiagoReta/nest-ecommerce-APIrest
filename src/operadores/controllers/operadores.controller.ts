@@ -14,6 +14,11 @@ export class OperadoresController {
   findAll() {
     return this.operadoresService.findAll();
   }
+  @Post()
+  @ApiOperation({ summary: 'Crear un operador' })
+  async createOne(@Body() createOperadorDto: CreateOperadorDTO) {
+    return this.operadoresService.create(createOperadorDto);
+  }
 
   @Get(':id/pedidos')
   @ApiOperation({ summary: 'Obtener los pedidos de un operador por ID' })
