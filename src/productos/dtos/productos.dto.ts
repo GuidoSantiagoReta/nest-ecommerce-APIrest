@@ -1,13 +1,12 @@
-import { IsNotEmpty,IsString, IsNumber,IsUrl, IsPositive,} from 'class-validator';
-//import { PartialType, OmitType } from '@nestjs/mapped-types'; 
-import { ApiProperty, PartialType, OmitType } from '@nestjs/swagger';
-//el DTO permite leer los datos
+
+import { IsNotEmpty, IsString, IsNumber, IsUrl, IsPositive } from 'class-validator';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
 
 export class CreateProductDTO {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  readonly nombre: string; // solo lectura
+  readonly nombre: string;
 
   @ApiProperty()
   @IsString()
@@ -33,6 +32,12 @@ export class CreateProductDTO {
   @IsUrl()
   @IsNotEmpty()
   readonly imagen: string;
+
+  @ApiProperty()
+  @IsNumber()
+  @IsPositive()
+  @IsNotEmpty()
+  readonly fabricanteId: number;
 }
 
 export class UpdateProductDTO extends PartialType(CreateProductDTO) {}
@@ -41,6 +46,5 @@ export class RemoveProductDTO {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  readonly idProduct
-  
+  readonly idProduct: string;
 }
