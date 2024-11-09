@@ -1,10 +1,49 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { FabricantesService } from '../services/fabricantes.service'
+import { CreateFabricanteDto, UpdateFabricanteDto } from './../dtos/fabricantes.dto';
 
 @ApiTags('Fabricantes')
 @Controller('fabricantes')
 export class FabricantesController {
-  // Decorador y método para obtener un producto por ID del fabricante
+  constructor(private readonly fabricantesService: FabricantesService) {}
+
+  // Obtener todos los fabricantes
+  @Get()
+  @ApiOperation({ summary: 'Obtener todos los fabricantes' })
+  findAll() {
+    return this.fabricantesService.findAll();
+  }
+
+  // Obtener un fabricante por ID
+  @Get(':id')
+  @ApiOperation({ summary: 'Obtener un fabricante por ID' })
+  findOne(@Param('id') id: number) {
+    return this.fabricantesService.findOne(id);
+  }
+
+  // Crear un nuevo fabricante
+  @Post()
+  @ApiOperation({ summary: 'Crear un nuevo fabricante' })
+  create(@Body() payload: CreateFabricanteDto) {
+    return this.fabricantesService.create(payload);
+  }
+
+  // Modificar un fabricante existente
+  @Put(':id')
+  @ApiOperation({ summary: 'Modificar un fabricante existente' })
+  update(@Param('id') id: number, @Body() payload: UpdateFabricanteDto) {
+    return this.fabricantesService.update(id, payload);
+  }
+
+  // Eliminar un fabricante por ID
+  @Delete(':id')
+  @ApiOperation({ summary: 'Eliminar un fabricante por su ID' })
+  remove(@Param('id') id: number) {
+    return this.fabricantesService.remove(id);
+  }
+
+  // Obtener un producto por ID y fabricante
   @Get('/:nombre/productos/:productId')
   @ApiOperation({ summary: 'Obtener un producto por ID y fabricante' })
   getCategory(
@@ -12,40 +51,5 @@ export class FabricantesController {
     @Param('nombre') nombre: string,
   ) {
     return `El ID del producto es ${productId} del fabricante ${nombre}`;
-  }
-
-  // Decorador y método para crear un nuevo fabricante
-  @Post()
-  @ApiOperation({ summary: 'Crear un nuevo fabricante' })
-  create(@Body() payload: any) {
-    return {
-      message: 'Acción de crear',
-      payload,
-    };
-  }
-
-  // Decorador y método para modificar un fabricante
-  @Put(':idFabricante')
-  @ApiOperation({ summary: 'Modificar un fabricante existente' })
-  updateFabricante(
-    @Param('idFabricante') idFabricante: string,
-    @Body() body: any,
-  ): any {
-    return {
-      idFabricante: idFabricante,
-      nombre: body.nombre,
-      origen: body.origen,
-    };
-  }
-
-  // Decorador y método para eliminar un fabricante por ID
-  @Delete(':idFabricante')
-  @ApiOperation({ summary: 'Eliminar un fabricante por su ID' })
-  deleteFabricante(@Param('idFabricante') idFabricante: string): any {
-    return {
-      idFabricante: idFabricante,
-      delete: true,
-      count: 1,
-    };
   }
 }
