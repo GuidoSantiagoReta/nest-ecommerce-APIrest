@@ -4,6 +4,7 @@ import { ConfigType } from '@nestjs/config';
 import config from '../config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+
 const APIKEY = 'DEV-456';
 const APIKEYPROD = 'PROD-12345';
 
@@ -28,6 +29,7 @@ const APIKEYPROD = 'PROD-12345';
         };
       },
     }),
+  
   ],
   providers: [
     {
