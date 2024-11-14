@@ -48,4 +48,22 @@ export class ProductosController {
   deleteProduct(@Param('idProduct', ParseIntPipe) idProduct: number): any {
     return this.productsServices.remove(idProduct);
   }
+
+  // Agregar categoría a un producto
+  @Put(':id/category/:categoryId')
+  @ApiOperation({ summary: 'Agregar una categoría a un producto' })
+  addCategoryToProduct(
+    @Param('idProduct', ParseIntPipe) idProduct: number,
+    @Param('categoryId', ParseIntPipe) categoryId: number,
+  ) {
+    return this.productsServices.addCategoryToProduct(idProduct, categoryId);
+  }
+  // Remover categoría de un producto @Delete(':idProduct/categoria/:categoryId')
+  @ApiOperation({ summary: 'Remover una categoría de un producto' })
+  removeCategoryByProduct(
+    @Param('idProduct', ParseIntPipe) idProduct: number,
+    @Param('categoryId', ParseIntPipe) categoryId: number,
+  ) {
+    return this.productsServices.removeCategoryByProduct(idProduct, categoryId);
+  }
 }

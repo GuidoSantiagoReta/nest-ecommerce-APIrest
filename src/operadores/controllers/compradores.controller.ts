@@ -34,12 +34,17 @@ export class CompradoresController {
   // Decorador y método para modificar un comprador
   @Put(':idComprador')
   @ApiOperation({ summary: 'Modificar un comprador existente' })
-  async updateComprador(
+  updateComprador(
     @Param('idComprador') idComprador: string,
     @Body() body: any,
   ) {
-    return this.compradorService.update(Number(idComprador), body);
+    return {
+      idComprador: idComprador,
+      nombre: body.nombre,
+      email: body.email,
+    };
   }
+
   // Decorador y método para eliminar un comprador por ID
   @Delete(':idComprador')
   @ApiOperation({ summary: 'Eliminar un comprador por su ID' })

@@ -13,13 +13,15 @@ import { PedidosController } from './controllers/pedidos.controller';
 import { PedidosService } from './services/pedidos.service';
 
 import { ProductosModule } from '../productos/productos.module';
+import { Pedido } from './entities/pedido.entity';
+
 
 
 
 @Module({
   imports: [
     ProductosModule,
-    TypeOrmModule.forFeature([Operador, Comprador  /*agregar pedido al definir relaciones*/])
+    TypeOrmModule.forFeature([Operador, Comprador,]),
   ],
   controllers: [
     PedidosController, 
