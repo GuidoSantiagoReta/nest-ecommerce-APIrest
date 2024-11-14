@@ -22,7 +22,9 @@ import { Categoria } from './entities/categoria.entity';
     CategoriasService, 
     FabricantesService,
   ],
-  exports: [ProductosService],
+  exports: [ProductosService,
+    TypeOrmModule // estalinea exportar TypeOrmModule
+  ],
 })
 export class ProductosModule {}
 
