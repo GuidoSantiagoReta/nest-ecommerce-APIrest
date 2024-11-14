@@ -1,44 +1,40 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, ParseIntPipe } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { PedidosService } from './../services/pedidos.service';
+import { CreatePedidoDto, UpdatePedidoDto } from './../dtos/pedido.dto';
 
-@ApiTags('Pedidos') // Apitags para Swagger
+@ApiTags('Pedidos')
 @Controller('pedidos')
 export class PedidosController {
-  @Get('/:nombreComprador/:idPedido')
-  @ApiOperation({ summary: 'Obtener un pedido por nombre de comprador e ID' })
-  getPedido(
-    @Param('idPedido') idPedido: string,
-    @Param('nombreComprador') nombreComprador: string,
-  ) {
-    return `El id del pedido es: ${idPedido} del comprador ${nombreComprador}`;
+  constructor(private pedidosService: PedidosService) {}
+
+  @Get()
+  @ApiOperation({ summary: 'Obtener todos los pedidos' })
+  findAll() {
+    return this.pedidosService.findAll();
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Obtener un pedido por ID' })
+  get(@Param('id', ParseIntPipe) id: number) {
+    return this.pedidosService.findOne(id);
   }
 
   @Post()
   @ApiOperation({ summary: 'Crear un nuevo pedido' })
-  create(@Body() payload: any) {
-    return {
-      message: 'Acción de crear',
-      payload,
-    };
+  create(@Body() payload: CreatePedidoDto) {
+    return this.pedidosService.create(payload);
   }
 
-  @Put(':idPedido')
+  @Put(':id')
   @ApiOperation({ summary: 'Modificar un pedido existente' })
-  updatePedido(@Param('idPedido') idPedido: string, @Body() body: any): any {
-    return {
-      idPedido: idPedido,
-      comprador: body.idComprador,
-      monto: body.monto,
-    };
+  update(@Param('id', ParseIntPipe) id: number, @Body() payload: UpdatePedidoDto) {
+    return this.pedidosService.update(id, payload);
   }
 
-  @Delete(':idPedido')
+  @Delete(':id')
   @ApiOperation({ summary: 'Eliminar un pedido por su ID' })
-  deletePedido(@Param('idPedido') idPedido: string): any {
-    return {
-      idPedido: idPedido,
-      delete: true,
-      count: 1,
-    };
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.pedidosService.remove(id);
   }
 }

@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn, OneToMany } from 'typeorm';
 import { Comprador } from './comprador.entity';
+import { Pedido } from './pedido.entity';
 
 @Entity()
 export class Operador {
@@ -27,14 +28,16 @@ export class Operador {
   })
   updateAt: Date;
 
+  @OneToMany(() => Pedido, (pedido) => pedido.operador)
+  pedidos: Pedido[];
+
   @OneToOne(() => Comprador, (comprador) => comprador.operador, {
     nullable: true,
-  }
-)
-  @JoinColumn({name: 'compradorId'})
+  })
+  @JoinColumn({ name: 'compradorId' })
   comprador: Comprador;
 
-  @Column({name: 'compradorId', nullable: true})
+  @Column({ name: 'compradorId', nullable: true })
   compradorId: number;
- 
 }
+

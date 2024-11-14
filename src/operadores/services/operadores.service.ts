@@ -8,6 +8,7 @@ import { ProductosService } from './../../productos/services/productos.service';
 import { CreateOperadorDTO, UpdateOperadorDTO } from '../dtos/operador.dto';
 import { Client } from 'pg';
 import { CompradoresService } from './compradores.service';
+import { DetallePedido } from '../entities/detallePedido.entity';
 
 @Injectable()
 export class OperadoresService {
@@ -19,23 +20,22 @@ export class OperadoresService {
     private compradorService: CompradoresService,
   ) {}
 
-   findAll() {
+  findAll() {
     return this.operadorRepo.find({
-      relations: ['comprador']
+      relations: ['comprador'],
     });
   }
 
   async findOne(id: number) {
-    const operador = await this.operadorRepo.findOne({ 
-      where: { id }, 
+    const operador = await this.operadorRepo.findOne({
+      where: { id },
       relations: ['comprador'],
-     });
+    });
     if (!operador) {
       throw new NotFoundException(`Operador #${id} no encontrado`);
     }
     return operador;
   }
-  
 
   async create(data: CreateOperadorDTO) {
     try {
@@ -46,7 +46,8 @@ export class OperadoresService {
       }
       return await this.operadorRepo.save(newOperador);
     } catch (error) {
-      if (error.code === '23505') {  // Código de error de clave única duplicada
+      if (error.code === '23505') {
+        // Código de error de clave única duplicada
         throw new ConflictException('Operador ya existe con este email');
       } else {
         throw new InternalServerErrorException('Error al crear el operador');
@@ -56,13 +57,13 @@ export class OperadoresService {
 
   async update(id: number, changes: UpdateOperadorDTO) {
     const operador = await this.findOne(id);
-    if (changes.compradorId){
+    if (changes.compradorId) {
       const nuevoComprador = await this.compradorService.findOne(
         changes.compradorId,
       );
       operador.comprador = nuevoComprador;
     }
-    const updOperad =this.operadorRepo.merge(operador, changes);
+    const updOperad = this.operadorRepo.merge(operador, changes);
     return this.operadorRepo.save(updOperad);
   }
 
@@ -71,12 +72,33 @@ export class OperadoresService {
   }
 
   async getOrderByUser(id: number): Promise<Pedido> {
-    const operador = await this.operadorRepo.findOne({ where: { id } });
+    const operador = await this.operadorRepo.findOne({
+      where: { id },
+      relations: ['comprador'],
+    });
+
+    
+    const productos = await this.productsService.findAll();
+    const detalles: DetallePedido[] = productos.map(
+      (producto) =>
+        ({
+          id: 0, 
+          createAt: new Date(),
+          updateAt: new Date(),
+          cantidad: 1,
+          producto,
+          pedido: null, 
+        }) as DetallePedido,
+    );
+
     return {
+      id: 0,
       date: new Date(),
       operador,
-      products: await this.productsService.findAll(),
-    };
+      comprador: operador.comprador,
+      detalles,
+      updateAt: new Date(),
+    } as Pedido;
   }
 
   getTasks() {
@@ -91,3 +113,4 @@ export class OperadoresService {
     });
   }
 }
+
