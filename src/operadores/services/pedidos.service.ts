@@ -13,12 +13,13 @@ export class PedidosService {
   ) {}
 
   findAll() {
-    return this.pedidoRepo.find();
+    return this.pedidoRepo.find({ relations: ['detalles', 'detalles.producto'] });
   }
+  
 
   async findOne(id: number) {
     const pedido = await this.pedidoRepo.findOne(id, {
-      //relations: ['detalles', 'detalles.producto'],
+      relations: ['detalles', 'detalles.producto'],
     });
     if (!pedido) {
       throw new NotFoundException('No encontrado');

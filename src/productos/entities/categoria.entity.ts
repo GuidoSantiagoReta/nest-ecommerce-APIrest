@@ -30,7 +30,16 @@ export class Categoria {
   updateAt: Date;
 
   @ManyToMany(() => Producto, (producto) => producto.categorias)
-  @JoinTable() // Solo tiene que estar en un lado de la relación
+  @JoinTable({
+    name: 'productos_categorias',
+    joinColumn:{
+      name: 'categoria_id',
+    },
+    inverseJoinColumn: {
+      name:'producto_id'
+    }
+  }
+  ) // Solo tiene que estar en un lado de la relación
   productos: Producto[];
 }
 

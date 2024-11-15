@@ -8,6 +8,7 @@ import {
   ArrayNotEmpty,
   IsOptional,
   Min,
+  ValidateIf
 } from 'class-validator';
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 
@@ -58,19 +59,24 @@ export class CreateProductDTO {
 
 export class UpdateProductDTO extends PartialType(CreateProductDTO) {}
 
-export class RemoveProductDTO {
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  readonly idProduct: string;
-}
-
 export class FilterProductDTO {
   @IsOptional()
   @IsPositive()
-  limit: number;
-
+  @ApiProperty({ required: false })
+  readonly limit?: number;
+  
   @IsOptional()
   @Min(0)
-  offset: number;
+  @ApiProperty({ required: false })
+  readonly offset?: number;
+
+  @IsOptional()
+  @IsPositive()
+  @ApiProperty({ required: false })
+  readonly precioMinimo?: number;
+
+  @ValidateIf((item) => item.precioMinimo !== undefined) // No es opcional si existe precioMinimo
+  @IsPositive()
+  @ApiProperty({ required: false })
+  readonly precioMaximo?: number;
 }

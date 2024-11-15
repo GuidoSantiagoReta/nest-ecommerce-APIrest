@@ -1,13 +1,10 @@
-//El servicio contiene toda la lógica de negocio
-
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Between } from 'typeorm';
 import { Producto } from './../entities/producto.entity';
-import { CreateProductDTO, UpdateProductDTO } from './../dtos/productos.dto';
+import { CreateProductDTO, UpdateProductDTO, FilterProductDTO } from './../dtos/productos.dto';
 import { FabricantesService } from './fabricantes.service';
 import { Categoria } from '../entities/categoria.entity';
-import { umask } from 'process';
 
 @Injectable()
 export class ProductosService {
@@ -17,8 +14,31 @@ export class ProductosService {
     private fabricantesService: FabricantesService,
   ) {}
 
-  findAll() {
-    return this.productRepo.find({ relations: ['fabricante', 'categorias'] });
+  async findAll(params?: FilterProductDTO) {
+    const where: any = {};
+
+    if (params) {
+      const { limit, offset, precioMinimo, precioMaximo } = params;
+
+      if (precioMinimo !== undefined && precioMaximo !== undefined) {
+        where.precio = Between(precioMinimo, precioMaximo);
+      } else if (precioMinimo !== undefined) {
+        where.precio = Between(precioMinimo, Infinity);
+      } else if (precioMaximo !== undefined) {
+        where.precio = Between(0, precioMaximo);
+      }
+
+      return this.productRepo.find({
+        relations: ['fabricante', 'categorias'],
+        where,
+        take: limit,
+        skip: offset,
+      });
+    }
+
+    return this.productRepo.find({
+      relations: ['fabricante', 'categorias'],
+    });
   }
 
   async findOne(id: number) {
@@ -33,7 +53,7 @@ export class ProductosService {
 
   async create(data: CreateProductDTO) {
     const newProduct = this.productRepo.create(data);
-  
+
     if (data.fabricanteId) {
       const fabricante = await this.fabricantesService.findOne(data.fabricanteId);
       if (!fabricante) {
@@ -41,7 +61,7 @@ export class ProductosService {
       }
       newProduct.fabricante = fabricante;
     }
-  
+
     if (data.categoriasIds) {
       const categorias = await this.categoriaRepo.findByIds(data.categoriasIds);
       if (categorias.length !== data.categoriasIds.length) {
@@ -49,10 +69,10 @@ export class ProductosService {
       }
       newProduct.categorias = categorias;
     }
-  
+
     return this.productRepo.save(newProduct);
   }
-  
+
   async update(id: number, changes: UpdateProductDTO) {
     const product = await this.findOne(id);
     if (changes.categoriasIds) {
@@ -75,7 +95,7 @@ export class ProductosService {
     return this.productRepo.remove(product);
   }
 
-  async addCategoryToProduct(productId: number, categoryId: number){
+  async addCategoryToProduct(productId: number, categoryId: number) {
     const producto = await this.productRepo.findOne(productId, {
       relations: ['categorias'],
     });
@@ -85,14 +105,12 @@ export class ProductosService {
   }
 
   async removeCategoryByProduct(productoId: number, categoryId: number) {
-  const producto = await this.productRepo.findOne(productoId, {
-    relations: ['categorias'],
-  });
-  producto.categorias = producto.categorias.filter(
-    (item) => item.id !== categoryId,
-  );
-  return this.productRepo.save(producto)
+    const producto = await this.productRepo.findOne(productoId, {
+      relations: ['categorias'],
+    });
+    producto.categorias = producto.categorias.filter(
+      (item) => item.id !== categoryId,
+    );
+    return this.productRepo.save(producto);
   }
-
 }
-
