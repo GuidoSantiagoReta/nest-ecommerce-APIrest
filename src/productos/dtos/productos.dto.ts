@@ -1,5 +1,14 @@
-
-import { IsNotEmpty, IsString, IsNumber, IsUrl, IsPositive, IsArray, ArrayNotEmpty } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  IsNumber,
+  IsUrl,
+  IsPositive,
+  IsArray,
+  ArrayNotEmpty,
+  IsOptional,
+  Min,
+} from 'class-validator';
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 
 export class CreateProductDTO {
@@ -54,4 +63,14 @@ export class RemoveProductDTO {
   @IsString()
   @IsNotEmpty()
   readonly idProduct: string;
+}
+
+export class FilterProductDTO {
+  @IsOptional()
+  @IsPositive()
+  limit: number;
+
+  @IsOptional()
+  @Min(0)
+  offset: number;
 }
