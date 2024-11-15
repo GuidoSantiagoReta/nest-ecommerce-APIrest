@@ -20,6 +20,8 @@ import { DetallePedidoController } from './controllers/detalle-pedido.controller
 import { DetallePedidoService } from './services/detalle-pedido.service';
 
 
+
+
 @Module({
   imports: [
     ProductosModule,

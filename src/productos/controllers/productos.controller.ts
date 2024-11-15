@@ -1,7 +1,7 @@
 //El controlador se enfoca solo en manejar las rutas y solicitudes.
 
-import { Controller, Get, Post, Put, Param, Body, Delete } from '@nestjs/common';
-import { CreateProductDTO, UpdateProductDTO } from 'src/productos/dtos/productos.dto';
+import { Controller, Get, Post, Put, Param, Body, Delete, Query } from '@nestjs/common';
+import { CreateProductDTO, UpdateProductDTO, FilterProductDTO } from 'src/productos/dtos/productos.dto';
 import { ProductosService } from 'src/productos/services/productos.service';
 import { ParseIntPipe } from 'src/common/parse-int/parse-int.pipe';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
@@ -14,8 +14,8 @@ export class ProductosController {
   // Decorador y método para obtener todos los productos
   @Get()
   @ApiOperation({ summary: 'Catálogo con todos los productos' })
-  findAll() {
-    return this.productsServices.findAll(); // utiliza el servicio ProductosService para obtener todos los productos
+  getProducts(@Query() params: FilterProductDTO) {
+    return this.productsServices.findAll(params);
   }
 
   // Decorador y método para obtener producto por ID
@@ -50,7 +50,7 @@ export class ProductosController {
   }
 
   // Agregar categoría a un producto
-  @Put(':id/category/:categoryId')
+  @Put(':idProduct/category/:categoryId')
   @ApiOperation({ summary: 'Agregar una categoría a un producto' })
   addCategoryToProduct(
     @Param('idProduct', ParseIntPipe) idProduct: number,
@@ -58,7 +58,9 @@ export class ProductosController {
   ) {
     return this.productsServices.addCategoryToProduct(idProduct, categoryId);
   }
-  // Remover categoría de un producto @Delete(':idProduct/categoria/:categoryId')
+
+  // Remover categoría de un producto
+  @Delete(':idProduct/category/:categoryId')
   @ApiOperation({ summary: 'Remover una categoría de un producto' })
   removeCategoryByProduct(
     @Param('idProduct', ParseIntPipe) idProduct: number,
