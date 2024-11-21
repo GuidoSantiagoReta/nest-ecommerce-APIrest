@@ -183,7 +183,7 @@ Permite serializar y deserializar objetos fácilmente.
 - nest g mo productos
 - Crear las cuatro carpetas correspondientes para cada módulo ( controllers, services, dtos y entities)
 
-15/11
+14/11
 # Utilización de MONGODB en un dockerfile empezando todas las configuraciones y el proyecto desde módulos
 
 - dockerfile con imagen mongo.
