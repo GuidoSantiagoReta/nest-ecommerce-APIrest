@@ -60,3 +60,7 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 # Docker compose
 docker-compose.yml
+
+# Ignorar DRAFT.md 
+
+DRAFT.md
