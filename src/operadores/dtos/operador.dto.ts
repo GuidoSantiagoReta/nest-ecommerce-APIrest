@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsString, IsNumber, } from 'class-validator';
-import { PartialType, OmitType } from '@nestjs/mapped-types';
+import { PartialType, OmitType } from '@nestjs/swagger';
 
 export class CreateOperadorDTO {
   @IsNumber()

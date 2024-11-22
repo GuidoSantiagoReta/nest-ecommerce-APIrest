@@ -1,49 +1,50 @@
-import { IsNotEmpty,IsString, IsNumber,IsUrl, IsPositive,} from 'class-validator';
-import { PartialType, OmitType } from '@nestjs/mapped-types'; 
 //el DTO permite leer los datos
+import { IsNotEmpty, IsString, IsNumber, IsUrl, IsPositive, IsOptional, Min, ValidateIf } from 'class-validator';
+import { PartialType } from '@nestjs/swagger';
 
 export class CreateProductDTO {
-    @IsString()
-    @IsNotEmpty()
-    readonly nombre: string; //solo lectura
+  @IsString()
+  @IsNotEmpty()
+  readonly nombre: string;
 
-    @IsString()
-    @IsNotEmpty()
-    readonly descripcion: string;
+  @IsString()
+  @IsNotEmpty()
+  readonly descripcion: string;
 
-    @IsNumber()
-    @IsPositive()
-    readonly precio: number;
+  @IsNumber()
+  @IsPositive()
+  readonly precio: number;
 
-    @IsNumber()
-    @IsPositive()
-    readonly stock: number;
+  @IsNumber()
+  @IsPositive()
+  readonly stock: number;
 
-    @IsString()
-    @IsNotEmpty()
-    readonly origen: string;
+  @IsString()
+  @IsNotEmpty()
+  readonly origen: string;
 
-    @IsUrl()
-    @IsNotEmpty()
-    readonly imagen: string;
-  }
-  //permite actualizar todos los campos del producto 
-  export class UpdateProductDTO extends PartialType(CreateProductDTO) {}
+  @IsUrl()
+  @IsNotEmpty()
+  readonly imagen: string;
+}
 
-// Eliminar producto
-  export class RemoveProductDTO {
-    @IsString()
-    @IsNotEmpty()
-    readonly idProduct: string; 
-  }
-  
+export class UpdateProductDTO extends PartialType(CreateProductDTO) {}
 
-{/*
-  export class UpdateProductDTO {
-    readonly nombre?: string; //atributo de forma opcional
-    readonly descripcion?: string;
-    readonly precio?: number;
-    readonly stock?: number;
-    readonly origen?: string;
-    readonly imagen?: string;
-  }*/}
+export class FilterProductsDTO {
+  @IsOptional() 
+  @IsPositive() 
+  limit: number;
+
+  @IsOptional()
+  @Min(0) 
+  offset: number;
+
+  @IsOptional()
+  @Min(0)
+  precioMinimo: number;
+
+  @ValidateIf(o => o.precioMinimo !== undefined)
+  @IsPositive()
+  precioMaximo: number;
+}
+

@@ -1,76 +1,64 @@
 //El servicio contiene toda la lógica de negocio
-
-import { Injectable, NotFoundException  } from '@nestjs/common';
-import { Producto } from 'src/productos/entities/producto.entity';
-import { CreateProductDTO, UpdateProductDTO } from 'src/productos/dtos/productos.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Producto } from '../entities/producto.entity';
+import { CreateProductDTO, UpdateProductDTO, FilterProductsDTO } from '../dtos/productos.dto';
 
 @Injectable()
 export class ProductosService {
-  private idCont = 1;
+  constructor(@InjectModel(Producto.name) private productoModel: Model<Producto>) {}
 
-  private productos: Producto[] = [
-    {
-      id: 1,
-      nombre: ' Prod A',
-      descripcion: ' Description product A',
-      precio: 7000,
-      stock: 1,
-      origen: 'China',
-      imagen: '',
-    },
-    {
-      id: 2,
-      nombre: ' Prod B',
-      descripcion: ' Description product B',
-      precio: 7000,
-      stock: 1,
-      origen: 'Taiwan',
-      imagen: '',
-    },
-  ];
+  async findAll(params?: FilterProductsDTO): Promise<Producto[]> {
+    const { limit, offset, precioMinimo, precioMaximo } = params || {};
+    const filters: any = {};
 
-  findAll(){    
-    return this.productos;   // devuelve la lista de productos
-}
+    if (precioMinimo !== undefined && precioMaximo !== undefined) {
+      filters.precio = { $gte: precioMinimo, $lte: precioMaximo };
+    }
 
-findOne(id: number): Producto {
-  const product = this.productos.find((item) => item.id === id);
-
-  if (!product) {
-    throw new NotFoundException(`El producto con id: #${id} no existe`);
+    const query = this.productoModel.find(filters);
+    if (offset !== undefined) {
+      query.skip(offset);
+    }
+    if (limit !== undefined) {
+      query.limit(limit);
+    }
+    return query.exec();
   }
-  return product;
+
+  async findOne(id: string): Promise<Producto> {
+    const product = await this.productoModel.findById(id).exec();
+    if (!product) {
+      throw new NotFoundException(`Producto con id #${id} no encontrado`);
+    }
+    return product;
+  }
+
+  async create(createProductDto: CreateProductDTO): Promise<Producto> {
+    const createdProduct = new this.productoModel(createProductDto);
+    return createdProduct.save();
+  }
+  
+  async update(id: string, updateProductDto: UpdateProductDTO): Promise<Producto> {
+    const updatedProduct = await this.productoModel.findByIdAndUpdate(
+      id,
+      { $set: updateProductDto },
+      { new: true }
+    ).exec();
+    if (!updatedProduct) {
+      throw new NotFoundException(`Producto con id #${id} no encontrado`);
+    }
+    return updatedProduct;
+  }
+
+  async remove(id: string): Promise<any> {
+    const deletedProduct = await this.productoModel.findByIdAndDelete(id).exec();
+    if (!deletedProduct) {
+      throw new NotFoundException(`Producto con id #${id} no encontrado`);
+    }
+    return { message: `Producto con id #${id} eliminado correctamente`, deletedProduct };
+  }
 }
 
-create(payload: CreateProductDTO) {
-  this.idCont = this.idCont + 1;
-  const newProduct = {
-    id: this.idCont,
-    ...payload,
-  };
-  this.productos.push(newProduct);
-  return newProduct;
-}
 
-update(id: number, payload: UpdateProductDTO) {
-  const product = this.findOne(id);
-  
-  // findOne ya lanza una excepción si no encuentra el producto
-  const index = this.productos.findIndex((item) => item.id === id);
-  this.productos[index] = {
-    ...product,
-    ...payload,
-  };
-  return this.productos[index];
-}
-
-remove(id: number) {
-  const product = this.findOne(id);
-  
-  // Si se encuentra, entonces eliminarlo
-  const index = this.productos.findIndex((item) => item.id === id);
-  this.productos.splice(index, 1);
-  return { message: `Producto con id #${id} eliminado correctamente`, product };
-}
-  
-}

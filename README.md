@@ -68,3 +68,5 @@ Validación y transformación de datos con class-validator y class-transformer.
 
 ## Pruebas
 Para asegurar que las rutas y los datos funcionen correctamente, se utiliza Postman para probar cada uno de los endpoints de la API.
+
+

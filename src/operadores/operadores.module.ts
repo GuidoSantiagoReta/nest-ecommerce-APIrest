@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
 import { CompradoresController } from './controllers/compradores.controller';
 import { OperadoresController } from './controllers/operadores.controller';
 import { PedidosController } from './controllers/pedidos.controller';
@@ -6,23 +7,28 @@ import { CompradoresService } from './services/compradores.service';
 import { OperadoresService } from './services/operadores.service';
 import { PedidosService } from './services/pedidos.service';
 import { ProductosModule } from '../productos/productos.module';
-
+import { Operador, OperadorSchema } from './entities/operador.entity';
+import { Pedido, PedidoSchema } from './entities/pedido.entity';
 
 @Module({
-  imports: [ProductosModule], 
+  imports: [
+    ProductosModule,
+    MongooseModule.forFeature([
+      { name: Operador.name, schema: OperadorSchema },
+      { name: Pedido.name, schema: PedidoSchema }
+    ]),
+  ],
   controllers: [
-    
-    PedidosController,
-    OperadoresController,
     CompradoresController,
-    
+    OperadoresController,
+    PedidosController,
   ],
   providers: [
     PedidosService,
     OperadoresService,
     CompradoresService,
-    
-    
   ],
 })
 export class OperadoresModule {}
+
+

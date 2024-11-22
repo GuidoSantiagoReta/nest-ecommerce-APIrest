@@ -2,31 +2,36 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Operador } from '../entities/operador.entity';
 import { Pedido } from '../entities/pedido.entity';
 import { ProductosService } from './../../productos/services/productos.service';
-import { CreateOperadorDTO, UpdateOperadorDTO } from '../dtos/operador.dto';
+import { Model, Types } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class OperadoresService {
-  constructor(private productsService: ProductosService) {} 
+  constructor(
+    @InjectModel(Operador.name) private operadorModel: Model<Operador>,
+    @InjectModel(Pedido.name) private pedidoModel: Model<Pedido>,
+    private readonly productsService: ProductosService,
+  ) {}
 
-  getOrderByUser(id: number): Pedido {
-    const operador = this.findOne(id);
+  async getOrderByUser(id: string): Promise<Pedido> {
+    const operador = await this.operadorModel.findById(id).exec();
     if (!operador) {
       throw new NotFoundException(`Operador con ID #${id} no encontrado`);
     }
-    return {
+
+    const products = await this.productsService.findAll();
+
+    const newPedido = new this.pedidoModel({
       date: new Date(),
-      operador,
-      products: this.productsService.findAll(),
-    };
+      operador: operador._id,
+      products,
+    });
+
+    return newPedido.save();
   }
 
-  findOne(id: number): Operador {
-    
-    return {
-      id,
-      email: `correo${id}@mail.com`,
-      password: '12345',
-      role: 'admin',
-    };
-  }
+  
 }
+
+
+
