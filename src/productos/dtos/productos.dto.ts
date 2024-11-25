@@ -1,6 +1,17 @@
 //el DTO permite leer los datos
-import { IsNotEmpty, IsString, IsNumber, IsUrl, IsPositive, IsOptional, Min, ValidateIf } from 'class-validator';
-import { PartialType } from '@nestjs/swagger';
+import { IsNotEmpty, IsString, IsNumber, IsUrl, IsPositive, ValidateNested, IsOptional, Min, ValidateIf, IsMongoId } from 'class-validator';
+import { ApiProperty, PartialType,  } from '@nestjs/swagger';
+
+
+export class CreateCategoriaDto {
+  @IsString()
+  @IsNotEmpty()
+  readonly nombre: string;
+
+  @IsUrl()
+  @IsOptional()
+  readonly imagen: string;
+}
 
 export class CreateProductDTO {
   @IsString()
@@ -26,7 +37,19 @@ export class CreateProductDTO {
   @IsUrl()
   @IsNotEmpty()
   readonly imagen: string;
+
+//Validar DTOs enbebidos
+  @IsNotEmpty()
+  @ValidateNested()
+  @ApiProperty()
+  readonly categoria: CreateCategoriaDto;
+
+  //fabricante
+  @IsNotEmpty() 
+  @IsMongoId() 
+  @ApiProperty() readonly fabricante: string;
 }
+
 
 export class UpdateProductDTO extends PartialType(CreateProductDTO) {}
 
@@ -47,4 +70,5 @@ export class FilterProductsDTO {
   @IsPositive()
   precioMaximo: number;
 }
+
 

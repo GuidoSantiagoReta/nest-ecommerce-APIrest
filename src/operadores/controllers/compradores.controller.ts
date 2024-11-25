@@ -1,43 +1,33 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
-
-
+import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
+import { CompradoresService } from '../services/compradores.service';
+import { CreateCompradorDto, UpdateCompradorDto } from '../dtos/comprador.dto';
 
 @Controller('compradores')
 export class CompradoresController {
-  //Decorador y método para obtener producto por ID
-  @Get(':idComprador')
-  getComprador(@Param('idComprador') idComprador: string): string {
-    return `El identificador del comprador es: ${idComprador}`;
+  constructor(private readonly compradorService: CompradoresService) {}
+
+  @Get()
+  findAll() {
+    return this.compradorService.findAll();
   }
 
-  //Decorador y método para crear un producto
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.compradorService.findOne(id);
+  }
+
   @Post()
-  create(@Body() payload: any) {
-    return {
-      message: 'Acción de crear',
-      payload,
-    };
+  create(@Body() createCompradorDto: CreateCompradorDto) {
+    return this.compradorService.create(createCompradorDto);
   }
-  //Decorador y método para modificar productos
 
-  @Put(':idComprador')
-  updateComprador(
-    @Param('idComprador') idComprador: string,
-    @Body() body: any,
-  ) {
-    return {
-      idComprador: idComprador,
-      nombre: body.nombre,
-      email: body.email,
-    };
+  @Put(':id')
+  update(@Param('id') id: string, @Body() updateCompradorDto: UpdateCompradorDto) {
+    return this.compradorService.update(id, updateCompradorDto);
   }
-  //Decorador y método para eliminar productos por ID
-  @Delete(':idComprador')
-  deleteComprador(@Param('idComprador') idComprador: string): any {
-    return {
-      idComprador: idComprador,
-      delete: true,
-      count: 1,
-    };
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.compradorService.remove(id);
   }
 }

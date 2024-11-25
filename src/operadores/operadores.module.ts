@@ -9,13 +9,15 @@ import { PedidosService } from './services/pedidos.service';
 import { ProductosModule } from '../productos/productos.module';
 import { Operador, OperadorSchema } from './entities/operador.entity';
 import { Pedido, PedidoSchema } from './entities/pedido.entity';
+import { Comprador, CompradorSchema } from './entities/comprador.entity'; 
 
 @Module({
   imports: [
     ProductosModule,
     MongooseModule.forFeature([
       { name: Operador.name, schema: OperadorSchema },
-      { name: Pedido.name, schema: PedidoSchema }
+      { name: Pedido.name, schema: PedidoSchema },
+      { name: Comprador.name, schema: CompradorSchema }, 
     ]),
   ],
   controllers: [
@@ -29,6 +31,8 @@ import { Pedido, PedidoSchema } from './entities/pedido.entity';
     CompradoresService,
   ],
 })
+
 export class OperadoresModule {}
+
 
 

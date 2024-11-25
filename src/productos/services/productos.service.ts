@@ -15,20 +15,25 @@ export class ProductosService {
 
     if (precioMinimo !== undefined && precioMaximo !== undefined) {
       filters.precio = { $gte: precioMinimo, $lte: precioMaximo };
+    } else if (precioMinimo !== undefined) {
+      filters.precio = { $gte: precioMinimo };
+    } else if (precioMaximo !== undefined) {
+      filters.precio = { $lte: precioMaximo };
     }
 
-    const query = this.productoModel.find(filters);
-    if (offset !== undefined) {
-      query.skip(offset);
-    }
-    if (limit !== undefined) {
-      query.limit(limit);
-    }
-    return query.exec();
+    return this.productoModel
+      .find(filters)  
+      .populate('fabricante') 
+      .skip(offset) 
+      .limit(limit) 
+      .exec();  
   }
 
   async findOne(id: string): Promise<Producto> {
-    const product = await this.productoModel.findById(id).exec();
+    const product = await this.productoModel
+      .findById(id)  
+      .populate('fabricante')  //probar la referencia a fabricante
+      .exec();  
     if (!product) {
       throw new NotFoundException(`Producto con id #${id} no encontrado`);
     }
@@ -41,11 +46,14 @@ export class ProductosService {
   }
   
   async update(id: string, updateProductDto: UpdateProductDTO): Promise<Producto> {
-    const updatedProduct = await this.productoModel.findByIdAndUpdate(
-      id,
-      { $set: updateProductDto },
-      { new: true }
-    ).exec();
+    const updatedProduct = await this.productoModel
+      .findByIdAndUpdate(
+        id,
+        { $set: updateProductDto },
+        { new: true }
+      )
+      .populate('fabricante')  // probar la referencia a fabricante
+      .exec();  
     if (!updatedProduct) {
       throw new NotFoundException(`Producto con id #${id} no encontrado`);
     }
@@ -53,7 +61,9 @@ export class ProductosService {
   }
 
   async remove(id: string): Promise<any> {
-    const deletedProduct = await this.productoModel.findByIdAndDelete(id).exec();
+    const deletedProduct = await this.productoModel
+      .findByIdAndDelete(id)
+      .exec();
     if (!deletedProduct) {
       throw new NotFoundException(`Producto con id #${id} no encontrado`);
     }
