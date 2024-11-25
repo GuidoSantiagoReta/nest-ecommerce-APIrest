@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 import { Fabricante, FabricanteSchema } from './fabricante.entity';
 import { Categoria, CategoriaSchema } from './categorias.entity';
+import { SubDoc,SubDocSchema } from './sub-doc.entity';
 
 @Schema()
 export class Producto extends Document {
@@ -32,7 +33,14 @@ export class Producto extends Document {
   //relacion uno a uno referencial
   @Prop({ type: Types.ObjectId, ref: Fabricante.name }) 
    fabricante: Fabricante | Types.ObjectId;
+//tipado de subdoc
+   @Prop({ type: SubDocSchema }) 
+    subDoc: SubDoc; 
+    
+    @Prop({ type: [SubDocSchema] }) 
+    subDocs: Types.Array<SubDoc>;
 }
+
 
 export const ProductoSchema = SchemaFactory.createForClass(Producto);
 

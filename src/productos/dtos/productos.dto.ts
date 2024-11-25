@@ -1,7 +1,7 @@
-//el DTO permite leer los datos
-import { IsNotEmpty, IsString, IsNumber, IsUrl, IsPositive, ValidateNested, IsOptional, Min, ValidateIf, IsMongoId } from 'class-validator';
-import { ApiProperty, PartialType,  } from '@nestjs/swagger';
-
+import { IsNotEmpty, IsString, IsNumber, IsUrl, IsPositive, ValidateNested, IsOptional, Min, ValidateIf, IsMongoId, IsArray } from 'class-validator';
+import { Type } from 'class-transformer';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { CreateSubDocDto } from './sub-doc.dto';
 
 export class CreateCategoriaDto {
   @IsString()
@@ -38,18 +38,32 @@ export class CreateProductDTO {
   @IsNotEmpty()
   readonly imagen: string;
 
-//Validar DTOs enbebidos
+  // Validar DTOs embebidos
   @IsNotEmpty()
   @ValidateNested()
+  @Type(() => CreateCategoriaDto)
   @ApiProperty()
   readonly categoria: CreateCategoriaDto;
 
-  //fabricante
+  // Fabricante referencial
   @IsNotEmpty() 
   @IsMongoId() 
-  @ApiProperty() readonly fabricante: string;
-}
+  @ApiProperty() 
+  readonly fabricante: string;
 
+  // Subdocumento 
+  @IsNotEmpty()
+  @ValidateNested()
+  @Type(() => CreateSubDocDto)
+  readonly subDoc: CreateSubDocDto;
+
+  // Array de subdocumentos
+  @IsNotEmpty()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateSubDocDto)
+  readonly subDocs: CreateSubDocDto[];
+}
 
 export class UpdateProductDTO extends PartialType(CreateProductDTO) {}
 
