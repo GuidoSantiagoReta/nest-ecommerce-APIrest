@@ -6,6 +6,7 @@ import { OperadoresModule } from './operadores/operadores.module';
 import { ProductosModule } from './productos/productos.module';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule, ConfigType } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
 import config from './config';
 
 @Module({
@@ -18,6 +19,7 @@ import config from './config';
       isGlobal: true,
       load: [config],
     }),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
