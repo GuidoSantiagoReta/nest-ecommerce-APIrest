@@ -3,8 +3,7 @@ import { Document, Types } from 'mongoose';
 
 @Schema()
 export class Operador extends Document {
-
-  @Prop({ type: Types.ObjectId, auto: true })    // Define la propiedad '_id' como un ObjectId de Mongoose y genera automáticamente un nuevo ObjectId si no se proporciona
+  @Prop({ type: Types.ObjectId, auto: true })
   _id: Types.ObjectId;
 
   @Prop({ required: true })
@@ -15,6 +14,29 @@ export class Operador extends Document {
 
   @Prop()
   role: string;
+
+  toJSON() {
+    const obj = this.toObject();
+    delete obj.password;
+    return obj;
+  }
 }
 
 export const OperadorSchema = SchemaFactory.createForClass(Operador);
+
+export interface OperadorSinPassword {
+  _id: Types.ObjectId;
+  email: string;
+  role: string;
+}
+
+
+export interface OperadorConPassword {
+  _id: Types.ObjectId;
+  email: string;
+  password: string;
+  role: string;
+}
+
+
+

@@ -1,6 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Res } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
 import { OperadoresService } from '../services/operadores.service';
-import { CreateOperadorDTO, UpdateOperadorDTO } from '../dtos/operador.dto';
+import { CreateOperadorDTO } from '../dtos/operador.dto';
 import { Response } from 'express';
 
 @Controller('operadores')
@@ -19,7 +19,6 @@ export class OperadoresController {
     res.status(201).json(operador);
   }
 
-  // Método para obtener los pedidos de un operador por ID
   @Get(':id/pedidos')
   async getOrders(@Param('id') id: string, @Res() res: Response) {
     const pedido = await this.operadoresService.getOrderByUser(id);
