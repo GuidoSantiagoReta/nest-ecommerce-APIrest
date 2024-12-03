@@ -64,3 +64,6 @@ docker-compose.yml
 # Ignorar DRAFT.md 
 
 DRAFT.md
+
+# Ignorar el archivo momentaneo hashPasswordScript.ts
+src/hashPasswordScript.ts

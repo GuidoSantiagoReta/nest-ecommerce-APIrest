@@ -7,6 +7,7 @@ import { ProductosModule } from './productos/productos.module';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule, ConfigType } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
+import { AuthController } from './auth/controllers/auth.controller';
 import config from './config';
 
 @Module({
@@ -21,7 +22,7 @@ import config from './config';
     }),
     AuthModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, AuthController],
   providers: [AppService],
 })
 export class AppModule implements OnModuleInit {
