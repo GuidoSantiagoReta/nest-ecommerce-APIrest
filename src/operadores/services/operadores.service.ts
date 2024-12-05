@@ -7,6 +7,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { CreateOperadorDTO } from '../dtos/operador.dto';
 import * as bcrypt from 'bcrypt';
 import { OperadorSinPassword, OperadorConPassword } from '../entities/operador.entity';
+import { Role } from '../../auth/models/roles.model';  // Importar el modelo de roles
 
 @Injectable()
 export class OperadoresService {
@@ -58,19 +59,31 @@ export class OperadoresService {
     return newPedido.save();
   }
   
-  // Método para hashear una nueva contraseña y actualizar el operador correspondiente.
+  // Método para hashear una nueva contraseña y actualizar el operador correspondiente, asignando siempre el rol ADMIN.
   async hashPasswordAndSave(email: string, plainPassword: string): Promise<OperadorSinPassword> {
-    const operador = await this.operadorModel.findOne({ email }).exec();
+    let operador = await this.operadorModel.findOne({ email }).exec();
+
     if (!operador) {
-      throw new NotFoundException(`Operador con email ${email} no encontrado`);
+      // Crear un nuevo operador si no existe
+      operador = new this.operadorModel({
+        email,
+        password: await bcrypt.hash(plainPassword, 10),
+        role: Role.ADMIN,  // Asignar siempre el rol ADMIN
+      });
+      await operador.save();
+    } else {
+      // Actualizar la contraseña y el rol del operador existente
+      operador.password = await bcrypt.hash(plainPassword, 10);
+      operador.role = Role.ADMIN;  // Asignar siempre el rol ADMIN
+      await operador.save();
     }
-    operador.password = await bcrypt.hash(plainPassword, 10);
-    await operador.save();
+
     const operadorObj = operador.toObject();
     delete operadorObj.password;
     return operadorObj as OperadorSinPassword;
   }
 }
+
 
 
 

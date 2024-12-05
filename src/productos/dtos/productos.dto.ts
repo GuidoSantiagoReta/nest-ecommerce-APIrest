@@ -35,34 +35,34 @@ export class CreateProductDTO {
   readonly origen: string;
 
   @IsUrl()
-  @IsNotEmpty()
+  @IsOptional()
   readonly imagen: string;
 
-  // Validar DTOs embebidos
-  @IsNotEmpty()
+  // Validar DTOs embebidos (opcional)
+  @IsOptional()
   @ValidateNested()
   @Type(() => CreateCategoriaDto)
   @ApiProperty()
-  readonly categoria: CreateCategoriaDto;
+  readonly categoria?: CreateCategoriaDto;
 
-  // Fabricante referencial
-  @IsNotEmpty() 
+  // Fabricante referencial ( opcional)
+  @IsOptional() 
   @IsMongoId() 
   @ApiProperty() 
-  readonly fabricante: string;
+  readonly fabricante?: string;
 
-  // Subdocumento 
-  @IsNotEmpty()
+  // Subdocumento (opcional)
+  @IsOptional()
   @ValidateNested()
   @Type(() => CreateSubDocDto)
-  readonly subDoc: CreateSubDocDto;
+  readonly subDoc?: CreateSubDocDto;
 
-  // Array de subdocumentos
-  @IsNotEmpty()
+  // Array de subdocumentos ( opcional)
+  @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateSubDocDto)
-  readonly subDocs: CreateSubDocDto[];
+  readonly subDocs?: CreateSubDocDto[];
 }
 
 export class UpdateProductDTO extends PartialType(CreateProductDTO) {}
@@ -84,5 +84,4 @@ export class FilterProductsDTO {
   @IsPositive()
   precioMaximo: number;
 }
-
 
