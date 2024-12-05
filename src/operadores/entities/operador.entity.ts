@@ -24,6 +24,8 @@ export class Operador extends Document {
 
 export const OperadorSchema = SchemaFactory.createForClass(Operador);
 
+//Definen la estructura de un operador Utilizadas para enviar datos al cliente
+
 export interface OperadorSinPassword {
   _id: Types.ObjectId;
   email: string;
