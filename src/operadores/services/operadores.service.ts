@@ -58,7 +58,7 @@ export class OperadoresService {
     return newPedido.save();
   }
   
-// Método para hashear una nueva contraseña y actualizar el operador correspondiente.
+  // Método para hashear una nueva contraseña y actualizar el operador correspondiente.
   async hashPasswordAndSave(email: string, plainPassword: string): Promise<OperadorSinPassword> {
     const operador = await this.operadorModel.findOne({ email }).exec();
     if (!operador) {
@@ -71,7 +71,6 @@ export class OperadoresService {
     return operadorObj as OperadorSinPassword;
   }
 }
-
 
 
 
