@@ -22,18 +22,18 @@ export class ProductosService {
     }
 
     return this.productoModel
-      .find(filters)  
-      .populate('fabricante') 
-      .skip(offset) 
-      .limit(limit) 
-      .exec();  
+      .find(filters)
+      .populate('fabricante')
+      .skip(offset)
+      .limit(limit)
+      .exec();
   }
 
   async findOne(id: string): Promise<Producto> {
     const product = await this.productoModel
-      .findById(id)  
-      .populate('fabricante')  //probar la referencia a fabricante
-      .exec();  
+      .findById(id)
+      .populate('fabricante')
+      .exec();
     if (!product) {
       throw new NotFoundException(`Producto con id #${id} no encontrado`);
     }
@@ -41,19 +41,15 @@ export class ProductosService {
   }
 
   async create(createProductDto: CreateProductDTO): Promise<Producto> {
-    const createdProduct = new this.productoModel(createProductDto);
+    const createdProduct = await this.productoModel.create(createProductDto);
     return createdProduct.save();
   }
-  
+
   async update(id: string, updateProductDto: UpdateProductDTO): Promise<Producto> {
     const updatedProduct = await this.productoModel
-      .findByIdAndUpdate(
-        id,
-        { $set: updateProductDto },
-        { new: true }
-      )
-      .populate('fabricante')  // probar la referencia a fabricante
-      .exec();  
+      .findByIdAndUpdate(id, { $set: updateProductDto }, { new: true })
+      .populate('fabricante')
+      .exec();
     if (!updatedProduct) {
       throw new NotFoundException(`Producto con id #${id} no encontrado`);
     }
@@ -70,5 +66,6 @@ export class ProductosService {
     return { message: `Producto con id #${id} eliminado correctamente`, deletedProduct };
   }
 }
+
 
 
