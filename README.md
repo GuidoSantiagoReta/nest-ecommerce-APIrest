@@ -47,6 +47,7 @@ Desarrollar una APIrest que gestione diferentes entidades de un e-commerce a tra
 ## Ramas del Proyecto
 - Una rama contiene la versión con bases de datos relacionales utilizando Docker, PostgreSQL y pgAdmin.
 - La otra rama contiene la versión utilizando MongoDB y Mongoose.
+- Se fueron creando los diferentes features.
 
 
 ### Entidades
