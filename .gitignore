@@ -2,10 +2,7 @@
 /dist
 /node_modules
 /build
-/postgres_data
-/pgadmin_data
-/mysql_data
-
+/mongo_data
 # Logs
 logs
 *.log
@@ -45,8 +42,8 @@ lerna-debug.log*
 .env.production.local
 .env.local
 .prod.env
-.test.env
 .stag.env
+.test.env
 
 # temp directory
 .temp
@@ -63,3 +60,10 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 # Docker compose
 docker-compose.yml
+
+# Ignorar DRAFT.md 
+
+DRAFT.md
+
+# Ignorar el archivo momentaneo hashPasswordScript.ts
+src/hashPasswordScript.ts

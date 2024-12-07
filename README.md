@@ -5,66 +5,96 @@ Desarrollar una aplicación que gestione diferentes entidades de un e-commerce a
 
 ## Componentes principales
 
-__1. Controladores__
-Clases responsables de manejar solicitudes HTTP entrantes y devolver respuestas.
-Asociados a rutas específicas del sistema de enrutamiento de NestJS.
-Modularizados y reutilizables.
+### Controladores
+- Clases responsables de manejar solicitudes HTTP entrantes y devolver respuestas.
+- Asociados a rutas específicas del sistema de enrutamiento de NestJS.
+- Modularizados y reutilizables.
 
-__2. Servicios__
-Clases que encapsulan la lógica de negocio.
-Utilizan el principio de inyección de dependencias.
-Contienen métodos para interactuar con bases de datos y realizar llamadas a APIs.
+### Servicios
+- Clases que encapsulan la lógica de negocio.
+- Utilizan el principio de inyección de dependencias.
+- Contienen métodos para interactuar con bases de datos y realizar llamadas a APIs.
 
-__3. Entidades__
-Clases que definen los atributos y comportamientos de objetos específicos.
-Ejemplo: producto.entity.ts
+### Entidades
+- Clases que definen los atributos y comportamientos de objetos específicos.
 
-__4. DTOs (Data Transfer Objects)__
-Máscaras para filtrar entradas de datos.
-Validan la estructura y tipos de datos recibidos desde el cliente.
-Protegen la API contra solicitudes malformadas o maliciosas.
 
-__5. Bibliotecas adicionales__
+### DTOs (Data Transfer Objects)
+- Máscaras para filtrar entradas de datos.
+- Validan la estructura y tipos de datos recibidos desde el cliente.
+- Protegen la API contra solicitudes malformadas o maliciosas.
 
-@nestjs/mapped-types: Para crear tipos flexibles basados en otros tipos existentes.
-class-validator: Para validar decoradores y validaciones en tiempo de ejecución.
-class-transformer: Para facilitar la conversión entre diferentes formatos de datos.
+## Entidades Principales de los Módulos de la Aplicación
 
-## Implementación
+### Módulo Principal
+- Controlador y Servicio
 
-Generación de controladores:
+### Operadores
+- Controladores, DTOs, Entidades y Servicios de Compradores, Operadores y Pedidos.
 
-```
-nest generate controller <nombre-del-controlador>
+### Productos
+- Controladores, DTOs, Entidades y Servicios de Productos, Categorías y Fabricantes.
 
-```
-Creación de servicios:
+### Relaciones y Seguridad
+- La aplicación es una API de los distintos endpoints y relaciones con NestJS, MongoDB y Mongoose del lado del servidor.
+- Contiene Guards, JWT, Bcrypt y Passport para la seguridad.
+- Se realizan pruebas a los diferentes endpoints de la API utilizando Postman para garantizar el correcto funcionamiento.
 
-```
-nest generate service <nombre-del-servicio>
+## Ramas del Proyecto
+- Una rama contiene la versión con bases de datos relacionales utilizando Docker, PostgreSQL y pgAdmin.
+- La otra rama contiene la versión utilizando MongoDB y Mongoose.
 
-```
-## Implementación de DTOs
+## ER Diagram (Adaptado para MongoDB)
 
-```
-import { IsString, IsNotEmpty } from 'class-validator';
+### Entities
 
-export class CreateProductDTO {
-  @IsString()
-  @IsNotEmpty()
-  readonly nombre: string;
-  //...
-}
+#### Usuario
+- ID: ObjectId
+- Nombre: String
+- Email: String
+- Contraseña: String
+- Rol: String
 
-```
-Uso de @nestjs/mapped-types para crear tipos flexibles:
-```
-import { PartialType, OmitType } from '@nestjs/mapped-types';
+#### Producto
+- ID: ObjectId
+- Nombre: String
+- Descripción: String
+- Precio: Number
+- Stock: Number
+- Origen: String
+- Imagen: String
 
-export class UpdateProductDTO extends PartialType(OmitType(CreateProductDTO, ['nombre'])) {}
+#### Categoría
+- ID: ObjectId
+- Nombre: String
+- Descripción: String
 
-```
-Validación y transformación de datos con class-validator y class-transformer.
+#### Fabricante
+- ID: ObjectId
+- Nombre: String
+- País: String
 
-## Pruebas
-Para asegurar que las rutas y los datos funcionen correctamente, se utiliza Postman para probar cada uno de los endpoints de la API.
+#### Pedido
+- ID: ObjectId
+- Fecha: Date
+- Estado: String
+- UsuarioID: ObjectId (Referencia)
+- Total: Number
+
+#### PedidoProducto
+- ID: ObjectId
+- PedidoID: ObjectId (Referencia)
+- ProductoID: ObjectId (Referencia)
+- Cantidad: Number
+
+### Relationships
+- Un **Usuario** puede realizar muchos **Pedidos**.
+- Un **Pedido** puede tener muchos **Productos** a través de **PedidoProducto**.
+- Un **Producto** puede pertenecer a una **Categoría**.
+- Un **Producto** puede tener un **Fabricante**.
+
+### Security
+- Utiliza **JWT** para la autenticación de usuarios.
+- Usa **Bcrypt** para el hashing de contraseñas.
+- Implementar **Guards** y **Passport** para proteger las rutas y asegurar que solo los usuarios autenticados puedan acceder a ciertos recursos.
+
