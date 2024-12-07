@@ -1,7 +1,7 @@
-# Proyecto Nest (API REST de Ecommerce)
+# Proyecto Nest (APIrest de Ecommerce)
 
 ## Objetivo
-Desarrollar una aplicación que gestione diferentes entidades de un e-commerce a través de sus respectivos controladores.
+Desarrollar una APIrest que gestione diferentes entidades de un e-commerce a través de sus respectivos controladores.
 
 ## Componentes principales
 
@@ -35,9 +35,13 @@ Desarrollar una aplicación que gestione diferentes entidades de un e-commerce a
 ### Productos
 - Controladores, DTOs, Entidades y Servicios de Productos, Categorías y Fabricantes.
 
-### Relaciones y Seguridad
-- La aplicación es una API de los distintos endpoints y relaciones con NestJS, MongoDB y Mongoose del lado del servidor.
-- Contiene Guards, JWT, Bcrypt y Passport para la seguridad.
+### Relaciones 
+
+- Un **Usuario** puede realizar muchos **Pedidos**.
+- Un **Pedido** puede tener muchos **Productos** a través de **PedidoProducto**.
+- Un **Producto** puede pertenecer a una **Categoría**.
+- Un **Producto** puede tener un **Fabricante**.
+- La aplicación es una API de los distintos endpoints y relaciones con NestJS.
 - Se realizan pruebas a los diferentes endpoints de la API utilizando Postman para garantizar el correcto funcionamiento.
 
 ## Ramas del Proyecto
@@ -45,7 +49,7 @@ Desarrollar una aplicación que gestione diferentes entidades de un e-commerce a
 - La otra rama contiene la versión utilizando MongoDB y Mongoose.
 
 
-### Entities
+### Entidades
 
 #### Usuario
 - ID: ObjectId
@@ -86,13 +90,7 @@ Desarrollar una aplicación que gestione diferentes entidades de un e-commerce a
 - ProductoID: ObjectId (Referencia)
 - Cantidad: Number
 
-### Relaciónes
-- Un **Usuario** puede realizar muchos **Pedidos**.
-- Un **Pedido** puede tener muchos **Productos** a través de **PedidoProducto**.
-- Un **Producto** puede pertenecer a una **Categoría**.
-- Un **Producto** puede tener un **Fabricante**.
-
-### Segugirdad
+### Seguridad
 - Utiliza **JWT** para la autenticación de usuarios.
 - Usa **Bcrypt** para el hashing de contraseñas.
 - Implementar **Guards** y **Passport** para proteger las rutas y asegurar que solo los usuarios autenticados puedan acceder a ciertos recursos.
