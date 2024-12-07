@@ -44,7 +44,6 @@ Desarrollar una aplicación que gestione diferentes entidades de un e-commerce a
 - Una rama contiene la versión con bases de datos relacionales utilizando Docker, PostgreSQL y pgAdmin.
 - La otra rama contiene la versión utilizando MongoDB y Mongoose.
 
-## ER Diagram (Adaptado para MongoDB)
 
 ### Entities
 
@@ -98,3 +97,7 @@ Desarrollar una aplicación que gestione diferentes entidades de un e-commerce a
 - Usa **Bcrypt** para el hashing de contraseñas.
 - Implementar **Guards** y **Passport** para proteger las rutas y asegurar que solo los usuarios autenticados puedan acceder a ciertos recursos.
 
+
+## Diagrama de Entidad-Relación
+
+![Diagrama de Entidad-Relación](assets/diagrama.png)
