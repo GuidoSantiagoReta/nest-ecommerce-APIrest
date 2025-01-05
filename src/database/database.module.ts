@@ -2,11 +2,7 @@ import { Global, Module } from '@nestjs/common';
 import { Client } from 'pg';
 import { ConfigType } from '@nestjs/config';
 import config from '../config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-
-
-const APIKEY = 'DEV-456';
-const APIKEYPROD = 'PROD-12345';
+import { TypeOrmModule } from '@nestjs/typeorm'; 
 
 @Global()
 @Module({
