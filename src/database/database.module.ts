@@ -1,23 +1,23 @@
 import { Global, Module } from '@nestjs/common';
 import { Client } from 'pg';
-import { ConfigType } from '@nestjs/config';
+import { ConfigModule, ConfigService, ConfigType } from '@nestjs/config';
 import config from '../config';
-import { TypeOrmModule } from '@nestjs/typeorm'; 
-
-const APIKEY = 'DEV-456';
-const APIKEYPROD = 'PROD-12345';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Global()
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [config],
+    }),
     TypeOrmModule.forRootAsync({
-      inject: [config.KEY],
-      useFactory: (configService: ConfigType<typeof config>) => {
-        const { user, host, dbName, password, port } = configService.postgres;
-        //const { user, host, dbName, password, port } = configService.mysql;
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const { user, host, dbName, password, port } = configService.get('postgres');
         return {
           type: 'postgres',
-        //type: 'mysql',
+          //type: 'mysql',
           host,
           port,
           username: user,
@@ -28,17 +28,19 @@ const APIKEYPROD = 'PROD-12345';
         };
       },
     }),
-  
   ],
   providers: [
     {
       provide: 'APIKEY',
-      useValue: process.env.NODE_ENV === 'prod' ? APIKEYPROD : APIKEY,
+      useFactory: (configService: ConfigService) => {
+        return configService.get('NODE_ENV') === 'prod' ? configService.get('apiKeyProd') : configService.get('apiKey');
+      },
+      inject: [ConfigService],
     },
     {
       provide: 'PG',
-      useFactory: (configService: ConfigType<typeof config>) => {
-        const { user, host, dbName, password, port } = configService.postgres;
+      useFactory: (configService: ConfigService) => {
+        const { user, host, dbName, password, port } = configService.get('postgres');
         const client = new Client({
           user,
           host,
@@ -55,7 +57,7 @@ const APIKEYPROD = 'PROD-12345';
         });
         return client;
       },
-      inject: [config.KEY],
+      inject: [ConfigService],
     },
   ],
   exports: ['APIKEY', 'PG', TypeOrmModule],

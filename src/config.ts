@@ -21,5 +21,6 @@ export default registerAs('config', () => {
     password: process.env.MYSQL_ROOT_PASSWORD,
   },
   apiKey: process.env.API_KEY,
+  apiKeyProd: process.env.APIKEYPROD,
 }
 });
