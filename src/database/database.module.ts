@@ -1,10 +1,9 @@
 import { Global, Module } from '@nestjs/common';
-import { ConfigModule, ConfigType } from '@nestjs/config';
+import { ConfigModule, ConfigType, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import config from '../config';
 
-const APIKEY = 'DEV-456';
-const APIKEYPROD = 'PROD-12345';
+
 
 @Global()
 @Module({
@@ -26,12 +25,8 @@ const APIKEYPROD = 'PROD-12345';
       inject: [config.KEY],
     }),
   ],
-  providers: [
-    {
-      provide: 'APIKEY',
-      useValue: process.env.NODE_ENV === 'prod' ? APIKEYPROD : APIKEY,
-    },
-  ],
+  providers: [ { provide: 'APIKEY', useFactory: (configService: ConfigService) => { return configService.get('NODE_ENV') === 'prod' ? configService.get('apiKeyProd') : configService.get('apiKey'); }, 
+    inject: [ConfigService], }, ],
   //exclusión de 'MONGO' ahora Mongoose maneja la conexión a la base de datos
   exports: ['APIKEY', MongooseModule],
 })

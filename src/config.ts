@@ -10,6 +10,8 @@ export default registerAs('config', () => ({
     connection: process.env.MONGO_CONNECTION,
   },
   apiKey: process.env.APIKEY,
+  apiKeyProd: process.env.APIKEYPROD, 
+  nodeEnv: process.env.NODE_ENV,
   jwtSecret: process.env.JWTSECRET,
 }));
 
